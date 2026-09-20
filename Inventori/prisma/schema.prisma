@@ -5,11 +5,33 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Kategori {
+  id_kategori     Int   @id @default(autoincrement())
+  nama            String   
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  barang          Barang[]
+}
+
+model Barang {
+  id_barang      Int @id @default(autoincrement())
+  nama           String
+  stok           Int  @default(0)
+  harga          Decimal  @db.Decimal(10,2)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  id_kategori   Int?
+  kategori      Kategori? @relation(fields: [id_kategori], references:[id_kategori], onDelete:SetNull)
 }
